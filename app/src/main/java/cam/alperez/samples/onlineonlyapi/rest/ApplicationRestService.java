@@ -1,11 +1,16 @@
 package cam.alperez.samples.onlineonlyapi.rest;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.concurrent.TimeUnit;
 
 import cam.alperez.samples.onlineonlyapi.BuildConfig;
+import cam.alperez.samples.onlineonlyapi.rest.json.ApiGsonTypeAdapterFactory;
 import cam.alperez.samples.onlineonlyapi.rest.utils.LiveDataRetrofitCallAdapterFactory;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public interface ApplicationRestService {
 
@@ -26,11 +31,15 @@ public interface ApplicationRestService {
             .setHeaderConnection("keep-alive")
             .build();
 
+    Gson customGson = new GsonBuilder()
+            .registerTypeAdapterFactory(new ApiGsonTypeAdapterFactory())
+            .create();
+
     /*static final*/
     ApplicationRestService INSTANCE = new Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_API_URL)
             .client(HttpClientProvider.forParameters(httpClientParams).getHttpClient())
-            .addConverterFactory(null) //TODO Provide proper converter factory with all adapters
+            .addConverterFactory(GsonConverterFactory.create(customGson))
             .addCallAdapterFactory(new LiveDataRetrofitCallAdapterFactory())
             .build()
             .create(ApplicationRestService.class);

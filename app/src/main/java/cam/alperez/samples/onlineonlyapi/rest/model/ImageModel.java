@@ -17,9 +17,9 @@ public class ImageModel {
     private final int height;
 
     @SerializedName(value = "is_vector", alternate = {"isVector"})
-    private final int isVector;
+    private final boolean isVector;
 
-    public ImageModel(URL url, int sizeBytes, int width, int height, int isVector) {
+    public ImageModel(URL url, int sizeBytes, int width, int height, boolean isVector) {
         this.url = url;
         this.sizeBytes = sizeBytes;
         this.width = width;
@@ -43,7 +43,7 @@ public class ImageModel {
         return height;
     }
 
-    public int getIsVector() {
+    public boolean isVector() {
         return isVector;
     }
 }

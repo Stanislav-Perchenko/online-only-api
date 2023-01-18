@@ -1,6 +1,8 @@
 package cam.alperez.samples.onlineonlyapi.utils;
 
-public class IntId<T> {
+import cam.alperez.samples.onlineonlyapi.entity.Entity;
+
+public class IntId<T extends Entity> {
     public final int idValue;
 
     public IntId(int idValue) {
