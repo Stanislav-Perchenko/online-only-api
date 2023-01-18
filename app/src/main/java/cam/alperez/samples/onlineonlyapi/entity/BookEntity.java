@@ -1,4 +1,4 @@
-package cam.alperez.samples.onlineonlyapi.rest.entity;
+package cam.alperez.samples.onlineonlyapi.entity;
 
 import com.google.gson.annotations.SerializedName;
 
