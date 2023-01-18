@@ -7,7 +7,7 @@ import retrofit2.Response;
 public interface ApiResponse<T> {
 
     static <R> ApiResponse<R> create(Response<R> response) {
-        return new RemoteErrorApiResponseImpl<>(
+        return new RemoteApiResponseImpl<>(
                 response.code(),
                 response.message(),
                 response.body());
