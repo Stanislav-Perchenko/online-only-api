@@ -1,13 +1,10 @@
 package cam.alperez.samples.onlineonlyapi.ui.categorylist;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
-
-import android.content.Context;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.WindowManager;
 
 import java.util.List;
 import java.util.Locale;

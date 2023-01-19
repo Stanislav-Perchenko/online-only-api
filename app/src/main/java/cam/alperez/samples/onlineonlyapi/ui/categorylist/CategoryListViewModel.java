@@ -12,6 +12,7 @@ import java.util.List;
 import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
 import cam.alperez.samples.onlineonlyapi.rest.ApplicationRestService;
 import cam.alperez.samples.onlineonlyapi.rest.utils.ApiResponse;
+import cam.alperez.samples.onlineonlyapi.utils.NonNullMediatorLiveData;
 import cam.alperez.samples.onlineonlyapi.utils.ReplaceableSourceMediatorLiveData;
 
 public class CategoryListViewModel extends AndroidViewModel {
@@ -33,10 +34,10 @@ public class CategoryListViewModel extends AndroidViewModel {
                                 : Collections.emptyList()
         );
 
-        categoriesError = Transformations.map(
+        categoriesError = new NonNullMediatorLiveData<>(Transformations.map(
                 categoriesResponseMediator,
                 (ApiResponse<List<CategoryEntity>> input) -> input.isSuccessful() ? null : input
-        );
+        ));
 
         fetchCategories();
     }

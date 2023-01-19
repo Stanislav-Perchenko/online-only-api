@@ -35,8 +35,10 @@ public interface ApplicationRestService {
             .setHttpLoggingLevelOnDebug(HttpLoggingInterceptor.Level.BODY)
             .setUpstreamUseGzip(!BuildConfig.DEBUG)
             .setHeaderUserAgent("Stanislav.Perchenko")
-            .setHeaderAccept("application/json")
+            .setHeaderAccept("*/*")
+            .setHeaderAcceptEncoding("gzip, deflate, br")
             .setHeaderConnection("keep-alive")
+            .setHeaderContentType("application/json; charset=UTF-8")
             .build();
 
     Gson customGson = new GsonBuilder()
@@ -52,7 +54,7 @@ public interface ApplicationRestService {
             .build()
             .create(ApplicationRestService.class);
 
-    @GET("/v3/f6a163bc-3e00-401e-aff2-e8a803ce79ba")
+    @GET("/v3/66ab531b-40a3-4bb8-a92b-bcc5d9f97884")
     LiveData<ApiResponse<List<CategoryEntity>>> getCategories();
 
     @GET("{api_link}")
