@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="category_list_item_height">112dp</dimen>
+    <dimen name="category_list_icon_size">96dp</dimen>
+
+    <dimen name="text_size_category_list_item_title">22sp</dimen>
+</resources>

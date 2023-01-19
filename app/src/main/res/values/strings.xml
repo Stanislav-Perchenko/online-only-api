@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">OnlineOnlyApi</string>
 
+    <string name="screen_title_category_list">Book Categories</string>
+
     <string name="result_success">Success</string>
     <string name="result_server_error">Server returned an error</string>
     <string name="result_server_bad_data">Server returned bad data</string>
