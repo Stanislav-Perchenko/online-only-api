@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">OnlineOnlyApi</string>
+
+    <string name="result_success">Success</string>
+    <string name="result_server_error">Server returned an error</string>
+    <string name="result_server_bad_data">Server returned bad data</string>
+    <string name="result_connection_error">Connection problems</string>
+    <string name="result_critical_app_error">Critical application error</string>
 </resources>

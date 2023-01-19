@@ -15,6 +15,8 @@ import java.util.Locale;
 import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
 import cam.alperez.samples.onlineonlyapi.rest.ApplicationRestService;
 import cam.alperez.samples.onlineonlyapi.rest.utils.ApiResponse;
+import cam.alperez.samples.onlineonlyapi.ui.common.ErrorUiMessage;
+import cam.alperez.samples.onlineonlyapi.ui.common.ErrorUiMessageMapper;
 import cam.alperez.samples.onlineonlyapi.utils.NonNullMediatorLiveData;
 import cam.alperez.samples.onlineonlyapi.utils.ReplaceableSourceMediatorLiveData;
 
@@ -25,11 +27,14 @@ public class CategoryListViewModel extends AndroidViewModel {
     private final ReplaceableSourceMediatorLiveData<ApiResponse<List<CategoryEntity>>> categoriesResponseMediator;
 
     private final LiveData<List<CategoryEntity>> categories;
-    private final LiveData<ApiResponse<List<CategoryEntity>>> categoriesError;
+    private final LiveData<ErrorUiMessage> categoriesError;
+
+    private final ErrorUiMessageMapper errorMsgMapper;
 
     public CategoryListViewModel(Application app) {
         super(app);
         Log.i("CategoryListActivity", "----> ViewModel create!");
+        errorMsgMapper = new ErrorUiMessageMapper(app);
         categoriesResponseMediator = new ReplaceableSourceMediatorLiveData<>();
 
         categories = Transformations.map(
@@ -40,9 +45,9 @@ public class CategoryListViewModel extends AndroidViewModel {
                                 : Collections.emptyList()
         );
 
-        categoriesError = new NonNullMediatorLiveData<>(Transformations.map(
+        categoriesError = new NonNullMediatorLiveData<ErrorUiMessage>(Transformations.map(
                 categoriesResponseMediator,
-                (ApiResponse<List<CategoryEntity>> input) -> input.isSuccessful() ? null : input
+                (ApiResponse<List<CategoryEntity>> input) -> input.isSuccessful() ? null : errorMsgMapper.apply(input)
         ));
 
         observeCategoriesLiveDataForLogs();
@@ -60,7 +65,7 @@ public class CategoryListViewModel extends AndroidViewModel {
         return categories;
     }
 
-    public LiveData<ApiResponse<List<CategoryEntity>>> getCategoriesError() {
+    public LiveData<ErrorUiMessage> getCategoriesError() {
         return categoriesError;
     }
 
@@ -89,15 +94,8 @@ public class CategoryListViewModel extends AndroidViewModel {
         Log.i(TAG, "Successful response: nItems = "+value.size());
     };
 
-    private final Observer<ApiResponse<List<CategoryEntity>>> categoriesErrorObserver = value -> {
-        String text = String.format(Locale.UK,
-                "API error response: isSuccess=%b, exception=%s, httpCode=%d, httpMessage=%s, nItems=%s",
-                value.isSuccessful(),
-                (value.getLocalError() == null) ? "null" : (value.getLocalError().getClass().getSimpleName() + " - " + value.getLocalError().getMessage()),
-                value.httpCode(),
-                value.httpMessage(),
-                (value.getResponseData() == null) ? "null (0)" : ""+value.getResponseData().size());
-        Log.e(TAG, text);
+    private final Observer<ErrorUiMessage> categoriesErrorObserver = value -> {
+        Log.e(TAG, "API error response: "+value);
     };
 
 
