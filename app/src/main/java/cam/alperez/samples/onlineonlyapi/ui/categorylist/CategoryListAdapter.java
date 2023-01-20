@@ -18,15 +18,9 @@ import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
 
 public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.ViewHolder> {
 
-    public interface OnDataUpdateListener {
-        void onDataUpdated();
-    }
-
     private final LayoutInflater inflater;
 
     private final List<CategoryEntity> data;
-
-    private OnDataUpdateListener onDataUpdateListener;
 
     public CategoryListAdapter(Context ctx) {
         inflater = LayoutInflater.from(ctx);
@@ -38,13 +32,13 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         this.data.clear();
         this.data.addAll(data);
         notifyDataSetChanged();
-        if (onDataUpdateListener != null) {
-            onDataUpdateListener.onDataUpdated();
-        }
     }
 
-    public void setOnDataUpdateListener(OnDataUpdateListener l) {
-        this.onDataUpdateListener = l;
+    public void clear() {
+        if (data.size() > 0) {
+            data.clear();
+            notifyDataSetChanged();
+        }
     }
 
     @Override

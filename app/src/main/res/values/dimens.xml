@@ -4,4 +4,7 @@
     <dimen name="category_list_icon_size">96dp</dimen>
 
     <dimen name="text_size_category_list_item_title">22sp</dimen>
+
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
 </resources>

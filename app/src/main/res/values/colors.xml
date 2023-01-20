@@ -12,5 +12,10 @@
 
     <color name="light_gray_shaded">#D2D5D5</color>
 
+
+
     <color name="text_color_title">#151515</color>
+    <color name="text_color_white">#F0F0F0</color>
+
+    <color name="text_error_bg_color">#E02222</color>
 </resources>
