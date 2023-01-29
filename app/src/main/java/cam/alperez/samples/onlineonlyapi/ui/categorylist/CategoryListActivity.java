@@ -103,14 +103,14 @@ public class CategoryListActivity extends AppCompatActivity {
     private void observeCategoryBook(final CategoryListAdapter adapter) {
         viewModel.getCategoryBooksUiState().observe(this, uiState -> {
 
-            if (uiState.categoryId != null) {
-                adapter.setItemLoadingProgress(uiState.categoryId, uiState.isLoading);
+            if (uiState.categoryToDownload != null) {
+                adapter.setItemLoadingProgress(uiState.categoryToDownload.getId(), uiState.isLoading);
             }
 
             if (!uiState.isLoading) {
                 if (uiState.isSuccess && (uiState.data != null) && pendingNavigateToCategory) {
                     //TODO Open category details activity
-                    Toast.makeText(this, "Open category for id: "+uiState.categoryId, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Open category for: "+uiState.categoryToDownload.getDisplayName(), Toast.LENGTH_SHORT).show();
                 }
                 pendingNavigateToCategory = false;
             }

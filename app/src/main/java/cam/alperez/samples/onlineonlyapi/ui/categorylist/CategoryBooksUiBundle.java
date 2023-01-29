@@ -13,32 +13,32 @@ import cam.alperez.samples.onlineonlyapi.utils.IntId;
 public class CategoryBooksUiBundle extends ApiListResponseUiBundle<BookEntity> {
 
     @Nullable
-    public final IntId<CategoryEntity> categoryId;
+    public final CategoryEntity categoryToDownload;
 
-    public CategoryBooksUiBundle(@Nullable IntId<CategoryEntity> categoryId,
+    public CategoryBooksUiBundle(@Nullable CategoryEntity categoryToDownload,
                                  boolean isLoading,
                                  boolean isSuccess,
                                  @Nullable List<BookEntity> data,
                                  @Nullable ErrorUiMessage error,
                                  boolean isErrorMessageShow) {
         super(isLoading, isSuccess, data, error, isErrorMessageShow);
-        this.categoryId = categoryId;
+        this.categoryToDownload = categoryToDownload;
     }
 
-    public CategoryBooksUiBundle withCategoryId(IntId<CategoryEntity> categoryId) {
-        return new CategoryBooksUiBundle(categoryId, isLoading, isSuccess, data, error, isErrorMessageShow);
+    public CategoryBooksUiBundle withCategoryId(CategoryEntity categoryToDownload) {
+        return new CategoryBooksUiBundle(categoryToDownload, isLoading, isSuccess, data, error, isErrorMessageShow);
     }
 
     public CategoryBooksUiBundle withIsLoading(boolean newIsLoading) {
-        return new CategoryBooksUiBundle(categoryId, newIsLoading, isSuccess, data, error, isErrorMessageShow);
+        return new CategoryBooksUiBundle(categoryToDownload, newIsLoading, isSuccess, data, error, isErrorMessageShow);
     }
 
     public CategoryBooksUiBundle withErrorShow(boolean newIsErrShow) {
-        return new CategoryBooksUiBundle(categoryId, isLoading, isSuccess, data, error, newIsErrShow);
+        return new CategoryBooksUiBundle(categoryToDownload, isLoading, isSuccess, data, error, newIsErrShow);
     }
 
-    public static CategoryBooksUiBundle createSuccess(IntId<CategoryEntity> categoryId, List<BookEntity> data) {
-        return new CategoryBooksUiBundle(categoryId,
+    public static CategoryBooksUiBundle createSuccess(CategoryEntity categoryToDownload, List<BookEntity> data) {
+        return new CategoryBooksUiBundle(categoryToDownload,
                 false,
                 true,
                 data,
@@ -46,8 +46,8 @@ public class CategoryBooksUiBundle extends ApiListResponseUiBundle<BookEntity> {
                 false);
     }
 
-    public static CategoryBooksUiBundle createError(IntId<CategoryEntity> categoryId, ErrorUiMessage err) {
-        return new CategoryBooksUiBundle(categoryId,
+    public static CategoryBooksUiBundle createError(CategoryEntity categoryToDownload, ErrorUiMessage err) {
+        return new CategoryBooksUiBundle(categoryToDownload,
                 false,
                 false,
                 null,

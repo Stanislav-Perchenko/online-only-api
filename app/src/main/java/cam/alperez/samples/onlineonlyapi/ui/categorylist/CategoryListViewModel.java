@@ -56,12 +56,12 @@ public class CategoryListViewModel extends AndroidViewModel {
                 categoryBooksResponseMediator,
                 (ApiResponse<List<BookEntity>> input) -> {
                     CategoryBooksUiBundle oldUiState = categoryBooksUiState.getValue();
-                    final IntId<CategoryEntity> categoryId = (oldUiState != null)
-                            ? oldUiState.categoryId
-                            : IntId.valueOf(0);
+                    final CategoryEntity category = (oldUiState != null)
+                            ? oldUiState.categoryToDownload
+                            : null;
                     return (input.isSuccessful() && input.getResponseData() != null)
-                            ? CategoryBooksUiBundle.createSuccess(categoryId, input.getResponseData())
-                            : CategoryBooksUiBundle.createError(categoryId, errorMsgMapper.apply(input));
+                            ? CategoryBooksUiBundle.createSuccess(category, input.getResponseData())
+                            : CategoryBooksUiBundle.createError(category, errorMsgMapper.apply(input));
                 }
         );
 
@@ -114,7 +114,7 @@ public class CategoryListViewModel extends AndroidViewModel {
         CategoryBooksUiBundle currentState = categoryBooksUiState.getValue();
         if (currentState != null) {
             categoryBooksUiState.setValue(currentState
-                    .withCategoryId(category.getId())
+                    .withCategoryId(category)
                     .withIsLoading(true)
             );
         }
