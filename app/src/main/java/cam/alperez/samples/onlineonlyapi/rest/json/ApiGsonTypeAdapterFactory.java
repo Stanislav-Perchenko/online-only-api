@@ -20,7 +20,7 @@ public class ApiGsonTypeAdapterFactory implements TypeAdapterFactory {
         Class<? super T> cls = type.getRawType();
         if (cls == IntId.class) {
             return (TypeAdapter<T>) new IntIdTypeAdapter();
-        } else if (cls == FileType.class && type instanceof ParameterizedType) {
+        } else if (cls == FileType.class) {
             return (TypeAdapter<T>) new FileTypeTypeAdapter();
         } else if (cls == URL.class) {
             return (TypeAdapter<T>) new URLTypeAdapter();

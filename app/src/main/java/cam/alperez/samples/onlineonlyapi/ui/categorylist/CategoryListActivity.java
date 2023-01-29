@@ -109,7 +109,8 @@ public class CategoryListActivity extends AppCompatActivity {
 
             if (!uiState.isLoading) {
                 if (uiState.isSuccess && (uiState.data != null) && pendingNavigateToCategory) {
-                    viewModel.navigateToCategoryBooksScreen(uiState.categoryToDownload, uiState.data);
+                    viewModel.navigateToCategoryBooksScreen(this,
+                            uiState.categoryToDownload, uiState.data);
                 }
                 pendingNavigateToCategory = false;
             }

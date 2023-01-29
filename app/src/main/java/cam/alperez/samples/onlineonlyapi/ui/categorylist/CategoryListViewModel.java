@@ -1,5 +1,6 @@
 package cam.alperez.samples.onlineonlyapi.ui.categorylist;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Parcelable;
@@ -163,7 +164,7 @@ public class CategoryListViewModel extends AndroidViewModel {
         categoriesUiState.removeObserver(categoriesObserver);
     }
 
-    public void navigateToCategoryBooksScreen(@NonNull CategoryEntity category,
+    public void navigateToCategoryBooksScreen(@NonNull Activity currentActivity, @NonNull CategoryEntity category,
                                               @Nullable List<BookEntity> optBooks) {
         Intent launcher = new Intent(Navigation.ACTION_SCREEN_CATEGORY_BOOKS);
         launcher.putExtra(Navigation.EXTRA_BOOK_CATEGORY, category);
@@ -177,6 +178,6 @@ public class CategoryListViewModel extends AndroidViewModel {
                 launcher.putParcelableArrayListExtra(Navigation.EXTRA_BOOKS, extras);
             }
         }
-        getApplication().startActivity(launcher);
+        currentActivity.startActivity(launcher);
     }
 }
