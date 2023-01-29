@@ -1,5 +1,8 @@
 package cam.alperez.samples.onlineonlyapi.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -8,7 +11,7 @@ import cam.alperez.samples.onlineonlyapi.rest.model.FileModel;
 import cam.alperez.samples.onlineonlyapi.rest.model.ImageModel;
 import cam.alperez.samples.onlineonlyapi.utils.IntId;
 
-public class BookEntity implements Entity<BookEntity> {
+public class BookEntity implements Entity<BookEntity>, Parcelable {
 
     private final IntId<BookEntity> id;
 
@@ -94,4 +97,54 @@ public class BookEntity implements Entity<BookEntity> {
     public FileModel getFile() {
         return file;
     }
+
+
+
+    /******************************  Parcelable implementation  ***********************************/
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id.idValue);
+        parcel.writeInt(categoryId.idValue);
+        parcel.writeInt(order);
+        parcel.writeString(title);
+        parcel.writeStringList(authors);
+        parcel.writeString(publisher);
+        parcel.writeInt(year);
+        parcel.writeString(isbn);
+        parcel.writeParcelable(cover, i);
+        parcel.writeParcelable(file, i);
+    }
+
+
+
+    protected BookEntity(Parcel in) {
+        id = IntId.valueOf(in.readInt());
+        categoryId = IntId.valueOf(in.readInt());
+        order = in.readInt();
+        title = in.readString();
+        authors = in.createStringArrayList();
+        publisher = in.readString();
+        year = in.readInt();
+        isbn = in.readString();
+        cover = in.readParcelable(ImageModel.class.getClassLoader());
+        file  = in.readParcelable(FileModel.class.getClassLoader());
+    }
+
+    public static final Creator<BookEntity> CREATOR = new Creator<BookEntity>() {
+        @Override
+        public BookEntity createFromParcel(Parcel in) {
+            return new BookEntity(in);
+        }
+
+        @Override
+        public BookEntity[] newArray(int size) {
+            return new BookEntity[size];
+        }
+    };
+
 }

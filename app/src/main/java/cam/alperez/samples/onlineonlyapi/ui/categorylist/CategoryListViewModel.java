@@ -18,7 +18,6 @@ import cam.alperez.samples.onlineonlyapi.rest.ApplicationRestService;
 import cam.alperez.samples.onlineonlyapi.rest.utils.ApiResponse;
 import cam.alperez.samples.onlineonlyapi.ui.common.ApiListResponseUiBundle;
 import cam.alperez.samples.onlineonlyapi.ui.common.ErrorUiMessageMapper;
-import cam.alperez.samples.onlineonlyapi.utils.IntId;
 import cam.alperez.samples.onlineonlyapi.utils.MapMutableLiveData;
 import cam.alperez.samples.onlineonlyapi.utils.ReplaceableSourceMediatorLiveData;
 
