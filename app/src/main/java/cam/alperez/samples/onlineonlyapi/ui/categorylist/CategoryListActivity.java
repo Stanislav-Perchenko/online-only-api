@@ -42,22 +42,10 @@ public class CategoryListActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(CategoryListViewModel.class);
 
         observeCategories(listAdapter);
-    }
 
-    private void observeCategories(CategoryListAdapter adapter) {
-        viewModel.getCategories().observe(this, bundle -> {
-            vRefresher.setRefreshing(false);
-
-            if (bundle.isSuccess) {
-                tvError.setVisibility(View.GONE);
-                adapter.setData(bundle.data);
-            } else {
-                adapter.clear();
-                tvError.setText(bundle.error.detailedDescription);
-                tvError.setVisibility(View.VISIBLE);
-                Toast.makeText(this, bundle.error.displayText, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (savedInstanceState == null) {
+            viewModel.fetchCategories();
+        }
     }
 
     @Override
@@ -66,9 +54,30 @@ public class CategoryListActivity extends AppCompatActivity {
         vRefresher.setOnRefreshListener(viewModel::fetchCategories);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        viewModel.fetchCategories();
+    private void observeCategories(CategoryListAdapter adapter) {
+        viewModel.getCategoriesUiState().observe(this, uiState -> {
+
+            vRefresher.setRefreshing(uiState.isLoading);
+
+            if (uiState.isSuccess) {
+                tvError.setVisibility(View.GONE);
+                adapter.setData(uiState.data);
+            } else if (uiState.error != null) {
+                adapter.clear();
+                tvError.setText(uiState.error.detailedDescription);
+                tvError.setVisibility(View.VISIBLE);
+
+            }
+
+            if (uiState.isErrorMessageShow) {
+                if (uiState.error != null) {
+                    Toast.makeText(this, uiState.error.displayText, Toast.LENGTH_SHORT).show();
+                }
+                vRefresher.post(() -> viewModel.clearNeedShowCategoryError());
+            }
+        });
     }
+
+
+
 }

@@ -5,9 +5,10 @@ import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.Transformations;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,6 +17,7 @@ import cam.alperez.samples.onlineonlyapi.rest.ApplicationRestService;
 import cam.alperez.samples.onlineonlyapi.rest.utils.ApiResponse;
 import cam.alperez.samples.onlineonlyapi.ui.common.ApiListResponseUiBundle;
 import cam.alperez.samples.onlineonlyapi.ui.common.ErrorUiMessageMapper;
+import cam.alperez.samples.onlineonlyapi.utils.MapMutableLiveData;
 import cam.alperez.samples.onlineonlyapi.utils.ReplaceableSourceMediatorLiveData;
 
 public class CategoryListViewModel extends AndroidViewModel {
@@ -24,7 +26,7 @@ public class CategoryListViewModel extends AndroidViewModel {
 
     private final ReplaceableSourceMediatorLiveData<ApiResponse<List<CategoryEntity>>> categoriesResponseMediator;
 
-    private final LiveData<ApiListResponseUiBundle<CategoryEntity>> categories;
+    private final MutableLiveData<ApiListResponseUiBundle<CategoryEntity>> categoriesUiState;
 
     private final ErrorUiMessageMapper errorMsgMapper;
 
@@ -34,24 +36,25 @@ public class CategoryListViewModel extends AndroidViewModel {
         errorMsgMapper = new ErrorUiMessageMapper(app);
         categoriesResponseMediator = new ReplaceableSourceMediatorLiveData<>();
 
-        categories = Transformations.map(
-                categoriesResponseMediator,
+        categoriesUiState = MapMutableLiveData.create(
+                        categoriesResponseMediator,
                 (ApiResponse<List<CategoryEntity>> input) ->
                         (input.isSuccessful() && input.getResponseData() != null)
                                 ? ApiListResponseUiBundle.createSuccess(input.getResponseData())
                                 : ApiListResponseUiBundle.createError(errorMsgMapper.apply(input))
         );
+        categoriesUiState.setValue(ApiListResponseUiBundle.createSuccess(new ArrayList<>()));
 
         observeCategoriesLiveDataForLogs();
     }
 
     private void observeCategoriesLiveDataForLogs() {
         categoriesResponseMediator.observeForever(categoriesResponseMediatorObserver);
-        categories.observeForever(categoriesObserver);
+        categoriesUiState.observeForever(categoriesObserver);
     }
 
-    public LiveData<ApiListResponseUiBundle<CategoryEntity>> getCategories() {
-        return categories;
+    public LiveData<ApiListResponseUiBundle<CategoryEntity>> getCategoriesUiState() {
+        return categoriesUiState;
     }
 
     public void fetchCategories() {
@@ -60,7 +63,20 @@ public class CategoryListViewModel extends AndroidViewModel {
                 .INSTANCE.getCategories();
 
         categoriesResponseMediator.setSource(result);
+
+        ApiListResponseUiBundle<CategoryEntity> currentState = categoriesUiState.getValue();
+        if (currentState != null) {
+            categoriesUiState.setValue(currentState.withIsLoading(true));
+        }
+
         Log.i("CategoryListActivity", "<---- ViewModel exit fetch");
+    }
+
+    public void clearNeedShowCategoryError() {
+        ApiListResponseUiBundle<CategoryEntity> currentState = categoriesUiState.getValue();
+        if (currentState != null && currentState.isErrorMessageShow) {
+            categoriesUiState.setValue(currentState.withErrorShow(false));
+        }
     }
 
 
@@ -87,6 +103,6 @@ public class CategoryListViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         categoriesResponseMediator.removeObserver(categoriesResponseMediatorObserver);
-        categories.removeObserver(categoriesObserver);
+        categoriesUiState.removeObserver(categoriesObserver);
     }
 }
