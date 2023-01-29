@@ -1,5 +1,7 @@
 package cam.alperez.samples.onlineonlyapi.utils;
 
+import androidx.annotation.NonNull;
+
 import cam.alperez.samples.onlineonlyapi.entity.Entity;
 
 public class IntId<T extends Entity<?>> {
@@ -11,5 +13,11 @@ public class IntId<T extends Entity<?>> {
 
     public static <E extends Entity<?>> IntId<E> valueOf(int idValue) {
         return new IntId<>(idValue);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return Integer.toString(idValue);
     }
 }

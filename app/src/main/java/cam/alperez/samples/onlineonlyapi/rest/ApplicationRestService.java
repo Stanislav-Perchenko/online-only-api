@@ -54,9 +54,9 @@ public interface ApplicationRestService {
             .build()
             .create(ApplicationRestService.class);
 
-    @GET("/v3/66ab531b-40a3-4bb8-a92b-bcc5d9f97884")
+    @GET("/v3/3fd5ae30-670f-4de0-85ba-71bcc230c3e4")
     LiveData<ApiResponse<List<CategoryEntity>>> getCategories();
 
     @GET("{api_link}")
-    LiveData<ApiResponse<List<BookEntity>>> getBooksForCategory(@Path("api_link") String apiLink);
+    LiveData<ApiResponse<List<BookEntity>>> getBooksForCategory(@Path(value = "api_link", encoded = true) String apiLink);
 }

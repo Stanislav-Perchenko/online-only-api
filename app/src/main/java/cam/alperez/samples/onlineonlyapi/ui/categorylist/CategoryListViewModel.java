@@ -113,7 +113,10 @@ public class CategoryListViewModel extends AndroidViewModel {
 
         CategoryBooksUiBundle currentState = categoryBooksUiState.getValue();
         if (currentState != null) {
-            categoryBooksUiState.setValue(currentState.withIsLoading(true));
+            categoryBooksUiState.setValue(currentState
+                    .withCategoryId(category.getId())
+                    .withIsLoading(true)
+            );
         }
 
         LiveData<ApiResponse<List<BookEntity>>> result = ApplicationRestService

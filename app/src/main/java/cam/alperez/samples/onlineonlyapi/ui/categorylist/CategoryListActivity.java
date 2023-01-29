@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -16,11 +17,14 @@ import cam.alperez.samples.onlineonlyapi.R;
 
 public class CategoryListActivity extends AppCompatActivity {
 
+    public static final String STATE_PENDING_NAVIGATE_CATEGORY = "pendingNavigateToCategory";
+
     private SwipeRefreshLayout vRefresher;
     private TextView tvError;
 
     private CategoryListViewModel viewModel;
 
+    private boolean pendingNavigateToCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,10 @@ public class CategoryListActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         CategoryListAdapter listAdapter = new CategoryListAdapter(this);
         listAdapter.setItemClickListener((position, category) -> {
-            viewModel.fetchBooksForCategory(category);
+            if (!pendingNavigateToCategory) {
+                pendingNavigateToCategory = true;
+                viewModel.fetchBooksForCategory(category);
+            }
         });
         rv.setAdapter(listAdapter);
 
@@ -53,9 +60,21 @@ public class CategoryListActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        pendingNavigateToCategory = savedInstanceState.getBoolean(STATE_PENDING_NAVIGATE_CATEGORY, false);
+    }
+
+    @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         vRefresher.setOnRefreshListener(viewModel::fetchCategories);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(STATE_PENDING_NAVIGATE_CATEGORY, pendingNavigateToCategory);
     }
 
     private void observeCategories(CategoryListAdapter adapter) {
@@ -81,12 +100,28 @@ public class CategoryListActivity extends AppCompatActivity {
         });
     }
 
-    private void observeCategoryBook(CategoryListAdapter adapter) {
+    private void observeCategoryBook(final CategoryListAdapter adapter) {
         viewModel.getCategoryBooksUiState().observe(this, uiState -> {
-            //TODO Populate UI with current state
+
+            if (uiState.categoryId != null) {
+                adapter.setItemLoadingProgress(uiState.categoryId, uiState.isLoading);
+            }
+
+            if (!uiState.isLoading) {
+                if (uiState.isSuccess && (uiState.data != null) && pendingNavigateToCategory) {
+                    //TODO Open category details activity
+                    Toast.makeText(this, "Open category for id: "+uiState.categoryId, Toast.LENGTH_SHORT).show();
+                }
+                pendingNavigateToCategory = false;
+            }
+
+            if (uiState.isErrorMessageShow) {
+                if (uiState.error != null) {
+                    Toast.makeText(this, uiState.error.displayText, Toast.LENGTH_SHORT).show();
+                }
+                vRefresher.post(() -> viewModel.clearNeedShowCategoryBooksError());
+            }
         });
     }
-
-
 
 }

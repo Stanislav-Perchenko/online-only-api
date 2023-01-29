@@ -1,5 +1,8 @@
 package cam.alperez.samples.onlineonlyapi.rest;
 
+import androidx.annotation.NonNull;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +13,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 public class HttpClientProvider {
@@ -70,6 +74,14 @@ public class HttpClientProvider {
                 .addNetworkInterceptor(mDefaultHeadersInterceptor)
                 .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(
                         BuildConfig.DEBUG ? params.httpLoggingLevelOnDebug() : HttpLoggingInterceptor.Level.NONE))
+                .addNetworkInterceptor(chain -> {
+                    try {
+                        Thread.sleep(1600);
+                    } catch (InterruptedException e) {
+                        throw new IOException(e.getMessage(), e);
+                    }
+                    return chain.proceed(chain.request());
+                })
                 .build();
     }
 }

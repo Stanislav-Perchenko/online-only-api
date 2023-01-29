@@ -1,5 +1,7 @@
 package cam.alperez.samples.onlineonlyapi.ui.categorylist;
 
+import androidx.annotation.Nullable;
+
 import java.util.List;
 
 import cam.alperez.samples.onlineonlyapi.entity.BookEntity;
@@ -10,16 +12,21 @@ import cam.alperez.samples.onlineonlyapi.utils.IntId;
 
 public class CategoryBooksUiBundle extends ApiListResponseUiBundle<BookEntity> {
 
+    @Nullable
     public final IntId<CategoryEntity> categoryId;
 
-    public CategoryBooksUiBundle(IntId<CategoryEntity> categoryId,
+    public CategoryBooksUiBundle(@Nullable IntId<CategoryEntity> categoryId,
                                  boolean isLoading,
                                  boolean isSuccess,
-                                 List<BookEntity> data,
-                                 ErrorUiMessage error,
+                                 @Nullable List<BookEntity> data,
+                                 @Nullable ErrorUiMessage error,
                                  boolean isErrorMessageShow) {
         super(isLoading, isSuccess, data, error, isErrorMessageShow);
         this.categoryId = categoryId;
+    }
+
+    public CategoryBooksUiBundle withCategoryId(IntId<CategoryEntity> categoryId) {
+        return new CategoryBooksUiBundle(categoryId, isLoading, isSuccess, data, error, isErrorMessageShow);
     }
 
     public CategoryBooksUiBundle withIsLoading(boolean newIsLoading) {

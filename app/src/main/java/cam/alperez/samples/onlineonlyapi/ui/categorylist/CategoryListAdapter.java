@@ -1,5 +1,8 @@
 package cam.alperez.samples.onlineonlyapi.ui.categorylist;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,11 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import cam.alperez.samples.onlineonlyapi.R;
 import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
 import cam.alperez.samples.onlineonlyapi.ui.common.OnItemClickListener;
+import cam.alperez.samples.onlineonlyapi.utils.IntId;
 
 public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.ViewHolder> {
 
@@ -24,6 +30,8 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     private final List<CategoryEntity> data;
 
     private OnItemClickListener<CategoryEntity> itemClickListener;
+
+    private final Set<Integer> withProgressItemIds = new HashSet<>(10);
 
     public CategoryListAdapter(Context ctx) {
         inflater = LayoutInflater.from(ctx);
@@ -41,11 +49,23 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void clear() {
         if (data.size() > 0) {
             data.clear();
             notifyDataSetChanged();
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setItemLoadingProgress(IntId<CategoryEntity> categoryId, boolean isProgress) {
+        boolean changed;
+        if (isProgress) {
+            changed = withProgressItemIds.add(categoryId.idValue);
+        } else {
+            changed = withProgressItemIds.remove(categoryId.idValue);
+        }
+        if (changed) notifyDataSetChanged();
     }
 
     @Override
@@ -79,10 +99,12 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
         private int position;
         private TextView tvTitle;
+        private View vProgress;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.category_title);
+            vProgress = itemView.findViewById(R.id.item_load_progress);
             itemView.findViewById(R.id.clickable_container).setOnClickListener(v -> {
                 if (itemClickListener != null) {
                     itemClickListener.onItemClicked(position, getItem(position));
@@ -93,6 +115,8 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         void bindData(int position, CategoryEntity category) {
             this.position = position;
             tvTitle.setText(category.getDisplayName());
+            final boolean isProgress = withProgressItemIds.contains(category.getId().idValue);
+            vProgress.setVisibility(isProgress ? VISIBLE : INVISIBLE);
         }
     }
 }
