@@ -37,14 +37,15 @@ public class CategoryListActivity extends AppCompatActivity {
         RecyclerView rv = findViewById(R.id.items_recycler);
         rv.setLayoutManager(new LinearLayoutManager(this));
         CategoryListAdapter listAdapter = new CategoryListAdapter(this);
-        listAdapter.setItemClickListener((position, item) -> {
-            //TODO Implement this
+        listAdapter.setItemClickListener((position, category) -> {
+            viewModel.fetchBooksForCategory(category);
         });
         rv.setAdapter(listAdapter);
 
         viewModel = ViewModelProviders.of(this).get(CategoryListViewModel.class);
 
         observeCategories(listAdapter);
+        observeCategoryBook(listAdapter);
 
         if (savedInstanceState == null) {
             viewModel.fetchCategories();
@@ -69,7 +70,6 @@ public class CategoryListActivity extends AppCompatActivity {
                 adapter.clear();
                 tvError.setText(uiState.error.detailedDescription);
                 tvError.setVisibility(View.VISIBLE);
-
             }
 
             if (uiState.isErrorMessageShow) {
@@ -78,6 +78,12 @@ public class CategoryListActivity extends AppCompatActivity {
                 }
                 vRefresher.post(() -> viewModel.clearNeedShowCategoryError());
             }
+        });
+    }
+
+    private void observeCategoryBook(CategoryListAdapter adapter) {
+        viewModel.getCategoryBooksUiState().observe(this, uiState -> {
+            //TODO Populate UI with current state
         });
     }
 

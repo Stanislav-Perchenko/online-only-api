@@ -28,7 +28,7 @@ class IntIdTypeAdapter extends TypeAdapter<IntId<? extends Entity<?>>> {
             return null;
         } else {
             int id = in.nextInt();
-            return new IntId<>(id);
+            return IntId.valueOf(id);
         }
     }
 }

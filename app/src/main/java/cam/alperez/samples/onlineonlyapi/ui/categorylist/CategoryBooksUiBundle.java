@@ -22,6 +22,14 @@ public class CategoryBooksUiBundle extends ApiListResponseUiBundle<BookEntity> {
         this.categoryId = categoryId;
     }
 
+    public CategoryBooksUiBundle withIsLoading(boolean newIsLoading) {
+        return new CategoryBooksUiBundle(categoryId, newIsLoading, isSuccess, data, error, isErrorMessageShow);
+    }
+
+    public CategoryBooksUiBundle withErrorShow(boolean newIsErrShow) {
+        return new CategoryBooksUiBundle(categoryId, isLoading, isSuccess, data, error, newIsErrShow);
+    }
+
     public static CategoryBooksUiBundle createSuccess(IntId<CategoryEntity> categoryId, List<BookEntity> data) {
         return new CategoryBooksUiBundle(categoryId,
                 false,

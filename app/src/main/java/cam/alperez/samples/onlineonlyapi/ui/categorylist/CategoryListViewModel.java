@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import cam.alperez.samples.onlineonlyapi.entity.BookEntity;
 import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
 import cam.alperez.samples.onlineonlyapi.rest.ApplicationRestService;
 import cam.alperez.samples.onlineonlyapi.rest.utils.ApiResponse;
 import cam.alperez.samples.onlineonlyapi.ui.common.ApiListResponseUiBundle;
 import cam.alperez.samples.onlineonlyapi.ui.common.ErrorUiMessageMapper;
+import cam.alperez.samples.onlineonlyapi.utils.IntId;
 import cam.alperez.samples.onlineonlyapi.utils.MapMutableLiveData;
 import cam.alperez.samples.onlineonlyapi.utils.ReplaceableSourceMediatorLiveData;
 
@@ -28,6 +30,11 @@ public class CategoryListViewModel extends AndroidViewModel {
 
     private final MutableLiveData<ApiListResponseUiBundle<CategoryEntity>> categoriesUiState;
 
+    private final ReplaceableSourceMediatorLiveData<ApiResponse<List<BookEntity>>> categoryBooksResponseMediator;
+
+    private MutableLiveData<CategoryBooksUiBundle> categoryBooksUiState;
+
+
     private final ErrorUiMessageMapper errorMsgMapper;
 
     public CategoryListViewModel(Application app) {
@@ -35,15 +42,33 @@ public class CategoryListViewModel extends AndroidViewModel {
         Log.i("CategoryListActivity", "----> ViewModel create!");
         errorMsgMapper = new ErrorUiMessageMapper(app);
         categoriesResponseMediator = new ReplaceableSourceMediatorLiveData<>();
+        categoryBooksResponseMediator = new ReplaceableSourceMediatorLiveData<>();
 
         categoriesUiState = MapMutableLiveData.create(
-                        categoriesResponseMediator,
+                categoriesResponseMediator,
                 (ApiResponse<List<CategoryEntity>> input) ->
                         (input.isSuccessful() && input.getResponseData() != null)
                                 ? ApiListResponseUiBundle.createSuccess(input.getResponseData())
                                 : ApiListResponseUiBundle.createError(errorMsgMapper.apply(input))
         );
+
+        categoryBooksUiState = MapMutableLiveData.create(
+                categoryBooksResponseMediator,
+                (ApiResponse<List<BookEntity>> input) -> {
+                    CategoryBooksUiBundle oldUiState = categoryBooksUiState.getValue();
+                    final IntId<CategoryEntity> categoryId = (oldUiState != null)
+                            ? oldUiState.categoryId
+                            : IntId.valueOf(0);
+                    return (input.isSuccessful() && input.getResponseData() != null)
+                            ? CategoryBooksUiBundle.createSuccess(categoryId, input.getResponseData())
+                            : CategoryBooksUiBundle.createError(categoryId, errorMsgMapper.apply(input));
+                }
+        );
+
+
         categoriesUiState.setValue(ApiListResponseUiBundle.createSuccess(new ArrayList<>()));
+
+        categoryBooksUiState.setValue(CategoryBooksUiBundle.createSuccess(null, null));
 
         observeCategoriesLiveDataForLogs();
     }
@@ -59,15 +84,16 @@ public class CategoryListViewModel extends AndroidViewModel {
 
     public void fetchCategories() {
         Log.i("CategoryListActivity", "----> ViewModel enter fetch");
-        LiveData<ApiResponse<List<CategoryEntity>>> result = ApplicationRestService
-                .INSTANCE.getCategories();
-
-        categoriesResponseMediator.setSource(result);
 
         ApiListResponseUiBundle<CategoryEntity> currentState = categoriesUiState.getValue();
         if (currentState != null) {
             categoriesUiState.setValue(currentState.withIsLoading(true));
         }
+
+        LiveData<ApiResponse<List<CategoryEntity>>> result = ApplicationRestService
+                .INSTANCE.getCategories();
+
+        categoriesResponseMediator.setSource(result);
 
         Log.i("CategoryListActivity", "<---- ViewModel exit fetch");
     }
@@ -79,6 +105,30 @@ public class CategoryListViewModel extends AndroidViewModel {
         }
     }
 
+    public MutableLiveData<CategoryBooksUiBundle> getCategoryBooksUiState() {
+        return categoryBooksUiState;
+    }
+
+    public void fetchBooksForCategory(CategoryEntity category) {
+
+        CategoryBooksUiBundle currentState = categoryBooksUiState.getValue();
+        if (currentState != null) {
+            categoryBooksUiState.setValue(currentState.withIsLoading(true));
+        }
+
+        LiveData<ApiResponse<List<BookEntity>>> result = ApplicationRestService
+                .INSTANCE.getBooksForCategory(category.getBooksLink());
+
+        categoryBooksResponseMediator.setSource(result);
+
+    }
+
+    public void clearNeedShowCategoryBooksError() {
+        CategoryBooksUiBundle currentState = categoryBooksUiState.getValue();
+        if (currentState != null && currentState.isErrorMessageShow) {
+            categoryBooksUiState.setValue(currentState.withErrorShow(false));
+        }
+    }
 
     private final Observer<ApiResponse<List<CategoryEntity>>> categoriesResponseMediatorObserver = value -> {
         String text = String.format(Locale.UK,
