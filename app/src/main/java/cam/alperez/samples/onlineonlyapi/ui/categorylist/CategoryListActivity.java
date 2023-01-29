@@ -109,8 +109,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
             if (!uiState.isLoading) {
                 if (uiState.isSuccess && (uiState.data != null) && pendingNavigateToCategory) {
-                    //TODO Open category details activity
-                    Toast.makeText(this, "Open category for: "+uiState.categoryToDownload.getDisplayName(), Toast.LENGTH_SHORT).show();
+                    viewModel.navigateToCategoryBooksScreen(uiState.categoryToDownload, uiState.data);
                 }
                 pendingNavigateToCategory = false;
             }

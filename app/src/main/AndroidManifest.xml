@@ -27,6 +27,14 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <activity android:name=".ui.categorydetail.CategoryBooksActivity"
+            android:exported="false">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.alperez.samples.onlineonlyapi.navigation.ACTION_SCREEN_CATEGORY_BOOKS"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

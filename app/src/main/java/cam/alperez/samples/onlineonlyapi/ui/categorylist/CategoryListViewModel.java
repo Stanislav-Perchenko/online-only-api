@@ -1,8 +1,12 @@
 package cam.alperez.samples.onlineonlyapi.ui.categorylist;
 
 import android.app.Application;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -16,6 +20,7 @@ import cam.alperez.samples.onlineonlyapi.entity.BookEntity;
 import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
 import cam.alperez.samples.onlineonlyapi.rest.ApplicationRestService;
 import cam.alperez.samples.onlineonlyapi.rest.utils.ApiResponse;
+import cam.alperez.samples.onlineonlyapi.ui.Navigation;
 import cam.alperez.samples.onlineonlyapi.ui.common.ApiListResponseUiBundle;
 import cam.alperez.samples.onlineonlyapi.ui.common.ErrorUiMessageMapper;
 import cam.alperez.samples.onlineonlyapi.utils.MapMutableLiveData;
@@ -156,5 +161,22 @@ public class CategoryListViewModel extends AndroidViewModel {
         super.onCleared();
         categoriesResponseMediator.removeObserver(categoriesResponseMediatorObserver);
         categoriesUiState.removeObserver(categoriesObserver);
+    }
+
+    public void navigateToCategoryBooksScreen(@NonNull CategoryEntity category,
+                                              @Nullable List<BookEntity> optBooks) {
+        Intent launcher = new Intent(Navigation.ACTION_SCREEN_CATEGORY_BOOKS);
+        launcher.putExtra(Navigation.EXTRA_BOOK_CATEGORY, category);
+        if (optBooks != null) {
+            if (optBooks instanceof ArrayList) {
+                launcher.putParcelableArrayListExtra(Navigation.EXTRA_BOOKS,
+                        (ArrayList<? extends Parcelable>) optBooks);
+            } else {
+                ArrayList<Parcelable> extras = new ArrayList<>(optBooks.size());
+                extras.addAll(optBooks);
+                launcher.putParcelableArrayListExtra(Navigation.EXTRA_BOOKS, extras);
+            }
+        }
+        getApplication().startActivity(launcher);
     }
 }
