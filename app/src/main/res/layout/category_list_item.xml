@@ -3,11 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/category_list_item_height">
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/clickable_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground">
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/category_icon"
             android:layout_width="@dimen/category_list_icon_size"

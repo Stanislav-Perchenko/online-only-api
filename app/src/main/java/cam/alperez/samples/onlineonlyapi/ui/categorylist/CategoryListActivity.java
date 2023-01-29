@@ -37,6 +37,9 @@ public class CategoryListActivity extends AppCompatActivity {
         RecyclerView rv = findViewById(R.id.items_recycler);
         rv.setLayoutManager(new LinearLayoutManager(this));
         CategoryListAdapter listAdapter = new CategoryListAdapter(this);
+        listAdapter.setItemClickListener((position, item) -> {
+            //TODO Implement this
+        });
         rv.setAdapter(listAdapter);
 
         viewModel = ViewModelProviders.of(this).get(CategoryListViewModel.class);

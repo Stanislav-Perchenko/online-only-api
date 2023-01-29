@@ -15,6 +15,7 @@ import java.util.List;
 
 import cam.alperez.samples.onlineonlyapi.R;
 import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
+import cam.alperez.samples.onlineonlyapi.ui.common.OnItemClickListener;
 
 public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.ViewHolder> {
 
@@ -22,9 +23,15 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
     private final List<CategoryEntity> data;
 
+    private OnItemClickListener<CategoryEntity> itemClickListener;
+
     public CategoryListAdapter(Context ctx) {
         inflater = LayoutInflater.from(ctx);
         data = new ArrayList<>(10);
+    }
+
+    public void setItemClickListener(OnItemClickListener<CategoryEntity> itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -51,6 +58,10 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         return data.get(position).getId().idValue;
     }
 
+    public CategoryEntity getItem(int position) {
+        return data.get(position);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.category_list_item, parent, false);
@@ -64,7 +75,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     }
 
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private int position;
         private TextView tvTitle;
@@ -72,6 +83,11 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.category_title);
+            itemView.findViewById(R.id.clickable_container).setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClicked(position, getItem(position));
+                }
+            });
         }
 
         void bindData(int position, CategoryEntity category) {
