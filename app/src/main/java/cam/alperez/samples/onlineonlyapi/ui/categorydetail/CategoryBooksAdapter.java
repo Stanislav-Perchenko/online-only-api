@@ -29,6 +29,10 @@ public class CategoryBooksAdapter extends RecyclerView.Adapter<CategoryBooksAdap
         // Check each item for Category ID. If not related - ignore one.
     }
 
+    public void clear() {
+        //TODO Implement this
+    }
+
     @Override
     public int getItemCount() {
         //TODO Implement this

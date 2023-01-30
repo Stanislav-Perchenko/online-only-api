@@ -3,6 +3,7 @@ package cam.alperez.samples.onlineonlyapi.ui.categorydetail;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,7 +75,26 @@ public class CategoryBooksActivity extends AppCompatActivity {
     }
 
     private void observeUiState() {
-        //TODO Implement this
+        viewModel.getBooksUiState().observe(this, uiState -> {
+
+            vRefresher.setRefreshing(uiState.isLoading);
+
+            if (uiState.isSuccess) {
+                tvError.setVisibility(View.GONE);
+                listAdapter.setData(uiState.data);
+            } else if (uiState.error != null) {
+                listAdapter.clear();
+                tvError.setText(uiState.error.detailedDescription);
+                tvError.setVisibility(View.VISIBLE);
+            }
+
+            if (uiState.isErrorMessageShow) {
+                if (uiState.error != null) {
+                    Toast.makeText(this, uiState.error.displayText, Toast.LENGTH_SHORT).show();
+                }
+                vRefresher.post(() -> viewModel.clearNeedShowBookError());
+            }
+        });
     }
 
 }
