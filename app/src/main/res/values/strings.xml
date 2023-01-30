@@ -2,6 +2,7 @@
     <string name="app_name">OnlineOnlyApi</string>
 
     <string name="screen_title_category_list">Book Categories</string>
+    <string name="screen_title_books_for_category" formatted="false">Books for: %s</string>
 
     <string name="result_success">Success</string>
     <string name="result_server_error">Server returned an error</string>

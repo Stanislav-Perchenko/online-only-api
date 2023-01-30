@@ -29,7 +29,7 @@ public class CategoryListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_list);
+        setContentView(R.layout.activity_with_recycler);
 
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle(R.string.screen_title_category_list);

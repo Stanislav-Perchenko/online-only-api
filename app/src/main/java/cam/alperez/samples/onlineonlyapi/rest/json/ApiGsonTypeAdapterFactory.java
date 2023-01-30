@@ -15,6 +15,7 @@ public class ApiGsonTypeAdapterFactory implements TypeAdapterFactory {
 
     public ApiGsonTypeAdapterFactory() {}
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
         Class<? super T> cls = type.getRawType();
