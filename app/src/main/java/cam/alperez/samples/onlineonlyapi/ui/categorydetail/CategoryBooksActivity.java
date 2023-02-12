@@ -43,10 +43,12 @@ public class CategoryBooksActivity extends AppCompatActivity {
         tvError.setVisibility(View.GONE);
 
         if (savedInstanceState == null) {
+            // Initial creating ViewModel with constructor parameter via custom factory
             CategoryEntity category = getIntent().getParcelableExtra(Navigation.EXTRA_BOOK_CATEGORY);
             viewModel = new ViewModelProvider(this, new CategoryBooksViewModel.Factory(category))
                         .get(CategoryBooksViewModel.class);
         } else {
+            // Find existing ViewModel instance
             viewModel = ViewModelProviders.of(this).get(CategoryBooksViewModel.class);
         }
 

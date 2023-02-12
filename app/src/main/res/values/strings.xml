@@ -9,4 +9,6 @@
     <string name="result_server_bad_data">Server returned bad data</string>
     <string name="result_connection_error">Connection problems</string>
     <string name="result_critical_app_error">Critical application error</string>
+
+    <string name="property_isbn">ISBN:</string>
 </resources>
