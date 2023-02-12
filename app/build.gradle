@@ -53,6 +53,9 @@ dependencies {
     implementation 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
     //implementation 'com.google.guava:guava:27.0.1-android'
 
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.8'
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

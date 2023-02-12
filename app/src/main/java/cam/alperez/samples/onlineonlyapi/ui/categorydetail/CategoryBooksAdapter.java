@@ -12,6 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoProvider;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -103,7 +107,7 @@ public class CategoryBooksAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         void bingData(CategoryEntity category) {
-            //TODO Bind image
+            Picasso.get().load(category.getIconPng().getUrl().toString()).into(ivCategoryLogo);
             tvCategoryTitle.setText(category.getDisplayName());
         }
     }
@@ -131,7 +135,7 @@ public class CategoryBooksAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @SuppressLint("SetTextI18n")
         void bingData(BookEntity book) {
-            //TODO Bind image
+            Picasso.get().load(book.getCover().getUrl().toString()).into(ivBookCover);
             tvBookTitle.setText(book.getTitle());
             tvAuthors.setText(buildDisplayedAuthors(book.getAuthors()));
             tvYear.setText(Integer.toString(book.getYear()));

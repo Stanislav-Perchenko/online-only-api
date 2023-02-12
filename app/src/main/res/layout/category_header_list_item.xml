@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="168dp">
+    android:layout_height="124dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +17,8 @@
         <ImageView android:id="@+id/img_category_header"
             android:layout_width="@dimen/category_header_icon_size"
             android:layout_height="@dimen/category_header_icon_size"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:background="#E0E0E0"/>
 
         <TextView android:id="@+id/category_title_header"
             android:layout_width="wrap_content"
