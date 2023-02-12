@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"/>
 
-        <ImageView android:id="@+id/ic_category_header"
+        <ImageView android:id="@+id/img_category_header"
             android:layout_width="@dimen/category_header_icon_size"
             android:layout_height="@dimen/category_header_icon_size"
             android:scaleType="fitCenter"/>

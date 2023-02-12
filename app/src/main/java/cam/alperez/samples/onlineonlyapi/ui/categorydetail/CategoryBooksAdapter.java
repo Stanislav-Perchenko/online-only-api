@@ -2,9 +2,12 @@ package cam.alperez.samples.onlineonlyapi.ui.categorydetail;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import cam.alperez.samples.onlineonlyapi.R;
 import cam.alperez.samples.onlineonlyapi.entity.BookEntity;
 import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
 
@@ -63,11 +67,12 @@ public class CategoryBooksAdapter extends RecyclerView.Adapter<RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_TYPE_CATEGORY:
-                return null;
+                return new VHCategory(inflater.inflate(R.layout.category_header_list_item, parent, false));
             case ITEM_TYPE_BOOK:
-                return null;
+                return new VHBook(inflater.inflate(R.layout.book_list_item, parent, false));
+            default:
+                throw new RuntimeException("View type not supported: " + viewType);
         }
-        //TODO Implement this
     }
 
     @Override
@@ -88,24 +93,71 @@ public class CategoryBooksAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     static class VHCategory extends RecyclerView.ViewHolder {
+        private final ImageView ivCategoryLogo;
+        private final TextView tvCategoryTitle;
 
         public VHCategory(@NonNull View itemView) {
             super(itemView);
+            ivCategoryLogo = itemView.findViewById(R.id.img_category_header);
+            tvCategoryTitle= itemView.findViewById(R.id.category_title_header);
         }
 
         void bingData(CategoryEntity category) {
-            //TODO Implement this
+            //TODO Bind image
+            tvCategoryTitle.setText(category.getDisplayName());
         }
     }
 
     static class VHBook extends RecyclerView.ViewHolder {
 
+        private final ImageView ivBookCover;
+        private final TextView tvBookTitle;
+        private final TextView tvAuthors;
+        private final TextView tvYear;
+        private final TextView tvPublisher;
+        private final TextView tvIsbnTitle;
+        private final TextView tvIsbnValue;
+
         public VHBook(@NonNull View itemView) {
             super(itemView);
+            ivBookCover = itemView.findViewById(R.id.img_book_cover);
+            tvBookTitle = itemView.findViewById(R.id.txt_book_title);
+            tvAuthors = itemView.findViewById(R.id.txt_book_authors);
+            tvYear = itemView.findViewById(R.id.txt_book_year);
+            tvPublisher = itemView.findViewById(R.id.txt_book_publisher);
+            tvIsbnTitle = itemView.findViewById(R.id.book_isbn_title);
+            tvIsbnValue = itemView.findViewById(R.id.book_isbn_value);
         }
 
+        @SuppressLint("SetTextI18n")
         void bingData(BookEntity book) {
-            //TODO Implement this
+            //TODO Bind image
+            tvBookTitle.setText(book.getTitle());
+            tvAuthors.setText(buildDisplayedAuthors(book.getAuthors()));
+            tvYear.setText(Integer.toString(book.getYear()));
+            tvPublisher.setText(book.getPublisher());
+            if (TextUtils.isEmpty(book.getIsbn())) {
+                tvIsbnTitle.setVisibility(View.INVISIBLE);
+                tvIsbnValue.setText("");
+            } else {
+                tvIsbnTitle.setVisibility(View.VISIBLE);
+                tvIsbnValue.setText(book.getIsbn());
+            }
+        }
+
+        private CharSequence buildDisplayedAuthors(List<String> authors) {
+            if (authors.isEmpty()) {
+                return "";
+            } else if (authors.size() == 1) {
+                return authors.get(0);
+            } else {
+                StringBuilder sb = new StringBuilder();
+                authors.forEach(author -> {
+                    if (sb.length() > 0) sb.append(", ");
+                    sb.append(author);
+                });
+                return sb.toString();
+            }
         }
     }
 

@@ -29,18 +29,21 @@
         android:letterSpacing="0.03"
         tools:text="Book title"/>
 
-    <TextView android:id="@+id/txt_book_authors"
+    <TextView
+        android:id="@+id/txt_book_authors"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/img_book_cover"
-        android:layout_alignParentRight="true"
         android:layout_below="@id/txt_book_title"
-        android:layout_marginTop="@dimen/padding_small"
-        android:maxLines="2"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginRight="17dp"
+        android:layout_toRightOf="@id/img_book_cover"
         android:ellipsize="end"
-        android:textSize="14sp"
+        android:maxLines="2"
         android:textColor="@color/text_color_gray"
-        tools:text="authors authors authors authors authors authors"/>
+        android:textSize="14sp"
+        tools:text="authors authors authors authors authors authors" />
 
     <TextView android:id="@+id/txt_book_year"
         android:layout_width="wrap_content"
@@ -66,7 +69,7 @@
         android:textSize="14sp"
         tools:text="Publisher" />
 
-    <TextView
+    <TextView android:id="@+id/book_isbn_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/img_book_cover"
@@ -76,7 +79,7 @@
         android:textColor="@color/text_color_gray"
         android:text="@string/property_isbn"/>
 
-    <TextView android:id="@+id/book_isbn"
+    <TextView android:id="@+id/book_isbn_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/img_book_cover"
