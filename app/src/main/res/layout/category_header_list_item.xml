@@ -17,8 +17,7 @@
         <ImageView android:id="@+id/img_category_header"
             android:layout_width="@dimen/category_header_icon_size"
             android:layout_height="@dimen/category_header_icon_size"
-            android:scaleType="fitCenter"
-            android:background="#E0E0E0"/>
+            android:scaleType="fitCenter" />
 
         <TextView android:id="@+id/category_title_header"
             android:layout_width="wrap_content"

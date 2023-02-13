@@ -10,13 +10,12 @@
         android:gravity="center_vertical"
         android:clickable="true"
         android:background="?android:selectableItemBackground">
-        <androidx.constraintlayout.utils.widget.ImageFilterView
-            android:id="@+id/category_icon"
+        <ImageView android:id="@+id/category_icon"
             android:layout_width="@dimen/category_list_icon_size"
             android:layout_height="@dimen/category_list_icon_size"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:scaleType="centerInside"/>
+            android:layout_marginStart="@dimen/padding_large"
+            android:layout_marginEnd="@dimen/padding_large"
+            android:scaleType="fitCenter"/>
         <TextView android:id="@+id/category_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

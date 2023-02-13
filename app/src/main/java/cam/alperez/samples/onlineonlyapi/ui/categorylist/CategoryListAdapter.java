@@ -5,13 +5,17 @@ import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +24,9 @@ import java.util.Set;
 
 import cam.alperez.samples.onlineonlyapi.R;
 import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
+import cam.alperez.samples.onlineonlyapi.rest.model.ImageModel;
 import cam.alperez.samples.onlineonlyapi.ui.common.OnItemClickListener;
+import cam.alperez.samples.onlineonlyapi.ui.utils.UiUtils;
 import cam.alperez.samples.onlineonlyapi.utils.IntId;
 
 public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.ViewHolder> {
@@ -98,11 +104,15 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private int position;
+        private ImageView ivCategory;
         private TextView tvTitle;
         private View vProgress;
 
+        private final Point logoScaledSize = new Point();
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            ivCategory = itemView.findViewById(R.id.category_icon);
             tvTitle = itemView.findViewById(R.id.category_title);
             vProgress = itemView.findViewById(R.id.item_load_progress);
             itemView.findViewById(R.id.clickable_container).setOnClickListener(v -> {
@@ -117,6 +127,17 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
             tvTitle.setText(category.getDisplayName());
             final boolean isProgress = withProgressItemIds.contains(category.getId().idValue);
             vProgress.setVisibility(isProgress ? VISIBLE : INVISIBLE);
+
+            final ImageModel img = category.getIconPng();
+            UiUtils.calculateScaledImageSize(img.getWidth(), img.getHeight(),
+                    ivCategory.getLayoutParams().width, ivCategory.getLayoutParams().height,
+                    logoScaledSize);
+
+            Picasso.get()
+                    .load(img.getUrl().toString())
+                    .resize(logoScaledSize.x, logoScaledSize.y)
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(ivCategory);
         }
     }
 }

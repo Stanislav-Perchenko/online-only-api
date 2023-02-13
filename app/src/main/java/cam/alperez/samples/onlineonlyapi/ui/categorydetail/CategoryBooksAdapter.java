@@ -2,6 +2,7 @@ package cam.alperez.samples.onlineonlyapi.ui.categorydetail;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Point;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ import java.util.List;
 import cam.alperez.samples.onlineonlyapi.R;
 import cam.alperez.samples.onlineonlyapi.entity.BookEntity;
 import cam.alperez.samples.onlineonlyapi.entity.CategoryEntity;
+import cam.alperez.samples.onlineonlyapi.rest.model.ImageModel;
+import cam.alperez.samples.onlineonlyapi.ui.utils.UiUtils;
 
 public class CategoryBooksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -100,6 +103,8 @@ public class CategoryBooksAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final ImageView ivCategoryLogo;
         private final TextView tvCategoryTitle;
 
+        private final Point logoScaledSize = new Point();
+
         public VHCategory(@NonNull View itemView) {
             super(itemView);
             ivCategoryLogo = itemView.findViewById(R.id.img_category_header);
@@ -107,7 +112,16 @@ public class CategoryBooksAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         void bingData(CategoryEntity category) {
-            Picasso.get().load(category.getIconPng().getUrl().toString()).into(ivCategoryLogo);
+            final ImageModel img = category.getIconPng();
+            UiUtils.calculateScaledImageSize(img.getWidth(), img.getHeight(),
+                    ivCategoryLogo.getLayoutParams().width, ivCategoryLogo.getLayoutParams().height,
+                    logoScaledSize);
+
+            Picasso.get()
+                    .load(img.getUrl().toString())
+                    .resize(logoScaledSize.x, logoScaledSize.y)
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(ivCategoryLogo);
             tvCategoryTitle.setText(category.getDisplayName());
         }
     }
@@ -122,6 +136,8 @@ public class CategoryBooksAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final TextView tvIsbnTitle;
         private final TextView tvIsbnValue;
 
+        private final Point coverScaledSize = new Point();
+
         public VHBook(@NonNull View itemView) {
             super(itemView);
             ivBookCover = itemView.findViewById(R.id.img_book_cover);
@@ -135,7 +151,15 @@ public class CategoryBooksAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @SuppressLint("SetTextI18n")
         void bingData(BookEntity book) {
-            Picasso.get().load(book.getCover().getUrl().toString()).into(ivBookCover);
+            final ImageModel img = book.getCover();
+                    UiUtils.calculateScaledImageSize(img.getWidth(), img.getHeight(),
+                    ivBookCover.getLayoutParams().width, ivBookCover.getLayoutParams().height,
+                    coverScaledSize);
+            Picasso.get()
+                    .load(book.getCover().getUrl().toString())
+                    .resize(coverScaledSize.x, coverScaledSize.y)
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(ivBookCover);
             tvBookTitle.setText(book.getTitle());
             tvAuthors.setText(buildDisplayedAuthors(book.getAuthors()));
             tvYear.setText(Integer.toString(book.getYear()));
