@@ -36,21 +36,25 @@ public class CategoryBooksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_with_recycler);
 
         setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle(R.string.screen_title_books_for_category);
 
         vRefresher = findViewById(R.id.refresher);
         tvError = findViewById(R.id.text_error);
         tvError.setVisibility(View.GONE);
 
+        String screenTitle;
         if (savedInstanceState == null) {
             // Initial creating ViewModel with constructor parameter via custom factory
             CategoryEntity category = getIntent().getParcelableExtra(Navigation.EXTRA_BOOK_CATEGORY);
             viewModel = new ViewModelProvider(this, new CategoryBooksViewModel.Factory(category))
                         .get(CategoryBooksViewModel.class);
+            screenTitle = getString(R.string.screen_title_books_for_category, category.getDisplayName());
         } else {
             // Find existing ViewModel instance
             viewModel = ViewModelProviders.of(this).get(CategoryBooksViewModel.class);
+            screenTitle = getString(R.string.screen_title_books_for_category,
+                                    viewModel.getCategory().getDisplayName());
         }
+        getSupportActionBar().setTitle(screenTitle);
 
         RecyclerView rv = findViewById(R.id.items_recycler);
         rv.setLayoutManager(new LinearLayoutManager(this));
